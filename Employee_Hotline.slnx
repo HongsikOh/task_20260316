@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/솔루션 항목/">
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="Employee_Hotline.API/Employee_Hotline.API.csproj" />
+  <Project Path="Employee_Hotline.Application/Employee_Hotline.Application.csproj" />
+  <Project Path="Employee_Hotline.Domain/Employee_Hotline.Domain.csproj" />
+  <Project Path="Employee_Hotline.Infrastructure/Employee_Hotline.Infrastructure.csproj" />
+  <Project Path="Employee_Hotline.Tests/Employee_Hotline.Tests.csproj" Id="d4849bdc-34f0-4b86-ad69-30d05b9ad6ea" />
+</Solution>
