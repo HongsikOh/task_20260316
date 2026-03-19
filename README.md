@@ -25,7 +25,7 @@ https://dotnet.microsoft.com/ko-kr/download/dotnet/10.0
 ### dotnet-ef 설치
 
 ```bash
-dotnet tool install --global dotnet-ef --version 10.*
+dotnet tool install --global dotnet-ef --version 10.0.5
 ```
 
 ### SQLite 설치

@@ -31,4 +31,10 @@
     <ProjectReference Include="..\Employee_Hotline.Infrastructure\Employee_Hotline.Infrastructure.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<Content Include="Integration\TestFiles\*">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
 </Project>

@@ -38,6 +38,58 @@ public class EmployeesControllerTests(WebAppFactory factory)
         body!.SuccessCount.Should().Be(1);
     }
 
+    [Fact]
+    public async Task CreateEmployee_ViaCSVFile()
+    {
+        var formData = FileUploadHelper.CreateFileContent(
+            "test.csv", "text/csv");
+
+        var response = await _client.PostAsync("/api/employee", formData);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
+
+        var result = await response.Content.ReadFromJsonAsync<CreateEmployeeResult>();
+        result!.SuccessCount.Should().Be(3);
+        result.FailureCount.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task CreateEmployee_ViaCSVFile_Invalid()
+    {
+        var formData = FileUploadHelper.CreateFileContent(
+            "invalid.csv", "text/csv");
+
+        var response = await _client.PostAsync("/api/employee", formData);
+
+        response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+    }
+
+    [Fact]
+    public async Task CreateEmployee_ViaJsonFile()
+    {
+        var formData = FileUploadHelper.CreateFileContent(
+            "test.json", "application/json");
+
+        var response = await _client.PostAsync("/api/employee", formData);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
+
+        var result = await response.Content.ReadFromJsonAsync<CreateEmployeeResult>();
+        result!.SuccessCount.Should().Be(3);
+        result.FailureCount.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task CreateEmployee_ViaJsonFile_Invalid()
+    {
+        var formData = FileUploadHelper.CreateFileContent(
+            "invalid.json", "application/json");
+
+        var response = await _client.PostAsync("/api/employee", formData);
+
+        response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+    }
+
     #endregion
 
     #region 조회
