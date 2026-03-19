@@ -22,7 +22,7 @@ public class EmployeesControllerTests(WebAppFactory factory)
 
         var response = await _client.PostAsJsonAsync("/api/employee", raw);
 
-        response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [Fact]
@@ -87,7 +87,7 @@ public class EmployeesControllerTests(WebAppFactory factory)
 
         var response = await _client.PostAsync("/api/employee", formData);
 
-        response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     #endregion

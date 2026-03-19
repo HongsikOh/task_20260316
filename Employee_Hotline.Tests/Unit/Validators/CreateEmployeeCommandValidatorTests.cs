@@ -1,4 +1,5 @@
 ﻿using Employee_Hotline.Application.Commands.CreateEmployee;
+using Employee_Hotline.Application.Validators.DTOValidators;
 using Employee_Hotline.Tests.Shared;
 using FluentAssertions;
 
@@ -6,14 +7,15 @@ namespace Employee_Hotline.Tests.Unit.Validators;
 
 public class CreateEmployeeCommandValidatorTests
 {
-    private readonly CreateEmployeeCommandValidator _validator = new();
+    private readonly CreateEmployeeCommandValidator _commandValidator = new();
+    private readonly CreateEmployeeItemDtoValidator _dtoValidator = new();
 
     [Fact]
     public async Task Validate_ValidCommand()
     {
         var command = EmployeeFixtures.CreateEmployeeCommand();
 
-        var result = await _validator.ValidateAsync(command);
+        var result = await _commandValidator.ValidateAsync(command);
 
         result.IsValid.Should().BeTrue();
     }
@@ -23,8 +25,8 @@ public class CreateEmployeeCommandValidatorTests
     [InlineData(" ")]
     public async Task Validate_EmptyName(string? name)
     {
-        var command = EmployeeFixtures.CreateEmployeeCommand(name: name!);
-        var result = await _validator.ValidateAsync(command);
+        var dto = EmployeeFixtures.CreateEmployeeItemDto(name: name!);
+        var result = await _dtoValidator.ValidateAsync(dto);
 
         result.IsValid.Should().BeFalse();
         result.Errors.Should().Contain(e => e.ErrorMessage.Contains("이름"));
@@ -36,8 +38,8 @@ public class CreateEmployeeCommandValidatorTests
     [InlineData("@nodomain")]
     public async Task Validate_InvalidEmail(string email)
     {
-        var command = EmployeeFixtures.CreateEmployeeCommand(email: email);
-        var result = await _validator.ValidateAsync(command);
+        var dto = EmployeeFixtures.CreateEmployeeItemDto(email: email!);
+        var result = await _dtoValidator.ValidateAsync(dto);
 
         result.IsValid.Should().BeFalse();
         result.Errors.Should().Contain(e => e.ErrorMessage.Contains("이메일"));
@@ -50,8 +52,8 @@ public class CreateEmployeeCommandValidatorTests
     [InlineData("abcdefghijk")]
     public async Task Validate_InvalidTel(string tel)
     {
-        var command = EmployeeFixtures.CreateEmployeeCommand(tel: tel);
-        var result = await _validator.ValidateAsync(command);
+        var dto = EmployeeFixtures.CreateEmployeeItemDto(tel: tel!);
+        var result = await _dtoValidator.ValidateAsync(dto);
 
         result.IsValid.Should().BeFalse();
         result.Errors.Should().Contain(e => e.ErrorMessage.Contains("전화번호"));
@@ -61,8 +63,8 @@ public class CreateEmployeeCommandValidatorTests
     [InlineData("2022-01-01")]
     public async Task Validate_ValidDateFormats(string joined)
     {
-        var command = EmployeeFixtures.CreateEmployeeCommand(joined: joined);
-        var result = await _validator.ValidateAsync(command);
+        var dto = EmployeeFixtures.CreateEmployeeItemDto(joined: joined!);
+        var result = await _dtoValidator.ValidateAsync(dto);
 
         result.IsValid.Should().BeTrue();
     }
@@ -72,8 +74,8 @@ public class CreateEmployeeCommandValidatorTests
     [InlineData("not-a-date")]
     public async Task Validate_InvalidDateFormats(string joined)
     {
-        var command = EmployeeFixtures.CreateEmployeeCommand(joined: joined);
-        var result = await _validator.ValidateAsync(command);
+        var dto = EmployeeFixtures.CreateEmployeeItemDto(joined: joined!);
+        var result = await _dtoValidator.ValidateAsync(dto);
 
         result.IsValid.Should().BeFalse();
         result.Errors.Should().Contain(e => e.ErrorMessage.Contains("날짜"));

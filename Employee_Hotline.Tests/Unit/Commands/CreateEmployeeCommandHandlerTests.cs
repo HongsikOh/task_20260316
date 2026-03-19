@@ -3,6 +3,7 @@ using Employee_Hotline.Application.DTOs;
 using Employee_Hotline.Application.Interfaces;
 using Employee_Hotline.Domain.Entities;
 using FluentAssertions;
+using FluentValidation;
 using Moq;
 
 namespace Employee_Hotline.Tests.Unit.Commands;
@@ -11,11 +12,12 @@ public class CreateEmployeeCommandHandlerTests
 {
     private readonly Mock<IEmployeeRepository> _repoMock = new();
     private readonly Mock<IUnitOfWork> _uowMock = new();
+    private readonly Mock<IValidator<CreateEmployeeItemDto>> _itemValidator = new();
     private readonly CreateEmployeeCommandHandler _handler;
 
     public CreateEmployeeCommandHandlerTests()
     {
-        _handler = new CreateEmployeeCommandHandler(_repoMock.Object, _uowMock.Object);
+        _handler = new CreateEmployeeCommandHandler(_repoMock.Object, _uowMock.Object, _itemValidator.Object);
     }
 
     [Fact]

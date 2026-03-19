@@ -1,6 +1,8 @@
-﻿using Employee_Hotline.Application.Interfaces;
+﻿using Employee_Hotline.Application.DTOs;
+using Employee_Hotline.Application.Interfaces;
 using Employee_Hotline.Domain.Entities;
 using Employee_Hotline.Domain.Exceptions;
+using FluentValidation;
 using MediatR;
 using System.Globalization;
 
@@ -11,10 +13,15 @@ public sealed class CreateEmployeeCommandHandler
 {
     private readonly IEmployeeRepository _repo;
     private readonly IUnitOfWork _uow;
+    private readonly IValidator<CreateEmployeeItemDto> _itemValidator;
 
     public CreateEmployeeCommandHandler(
-        IEmployeeRepository repo, IUnitOfWork uow)
-        => (_repo, _uow) = (repo, uow);
+        IEmployeeRepository repo, IUnitOfWork uow, IValidator<CreateEmployeeItemDto> itemValidator)
+    {
+        _repo = repo;
+        _uow = uow;
+        _itemValidator = itemValidator;
+    }
 
     public async Task<CreateEmployeeResult> Handle(
     CreateEmployeeCommand req, CancellationToken ct)
@@ -29,6 +36,17 @@ public sealed class CreateEmployeeCommandHandler
         {
             try
             {
+                // Row 단위 Validation
+                var validationResult = await _itemValidator.ValidateAsync(item, ct);
+                if (validationResult is not null && !validationResult.IsValid)
+                {
+                    var reason = string.Join(", ",
+                        validationResult.Errors.Select(e => e.ErrorMessage));
+
+                    failures.Add(new CreateEmployeeFailure(idx + 1, item.Name, reason));
+                    continue;
+                }
+
                 // 조회 조건이 이름이기 때문에, 이름 중복 예외 처리
                 if (existingNames.Contains(item.Name))
                     throw new ConflictException($"이미 존재하는 이름입니다: {item.Name}");

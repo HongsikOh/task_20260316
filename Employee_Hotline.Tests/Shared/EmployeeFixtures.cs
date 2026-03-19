@@ -29,7 +29,6 @@ public static class EmployeeFixtures
         string? tel = null,
         string? joined = null)
     {
-
         Random rn = new();
         return [
             new CreateEmployeeItemDto(
@@ -39,6 +38,21 @@ public static class EmployeeFixtures
                 Joined: joined ?? "2026-03-01"
             )
         ];
+    }
+
+    public static CreateEmployeeItemDto CreateEmployeeItemDto(
+        string? name = null,
+        string? email = null,
+        string? tel = null,
+        string? joined = null)
+    {
+        Random rn = new();
+        return new CreateEmployeeItemDto(
+            Name: name ?? "홍길동이",
+            Email: email ?? $"test-{rn.NextInt64(10000)}@test.com",
+            Tel: tel ?? $"0101234{rn.NextInt64(9999)}",
+            Joined: joined ?? "2026-03-01"
+        );
     }
 
 
